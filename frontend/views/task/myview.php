@@ -1,12 +1,12 @@
 <?php
 
-use app\models\tables\Tasks;
+use frontend\models\tables\Tasks;
 use yii\helpers\Html;
 use yii\web\View;
 use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\tables\Tasks */
+/* @var $model frontend\models\tables\Tasks */
 
 $this->title = $model->name;
 if(!$hide){
@@ -21,7 +21,7 @@ if(!$hide){
 
 
     <?php
-    echo app\widgets\CardWidget::widget([
+    echo frontend\widgets\CardWidget::widget([
         'model'=> $model
     ]);
 
