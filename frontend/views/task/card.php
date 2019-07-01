@@ -1,13 +1,13 @@
 <?php
 
-use app\models\tables\Tasks;
+use frontend\models\tables\Tasks;
 use \yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use \yii\helpers\Url;
 use yii\web\View;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\tables\Tasks */
+/* @var $model frontend\models\tables\Tasks */
 
 $this->title = 'Редактирование задачи: ' . $model->name;
 $this->params['breadcrumbs'][] = ['label' => 'Список задач', 'url' => ['index']];
@@ -28,6 +28,8 @@ $this->params['breadcrumbs'][] = 'Карточка задачи';
         'searchModelFiles'=>$searchModelFiles,
         'filesnames'=>$filesnames,
         'taskAttachmentForm'=>$taskAttachmentForm,
+        'taskCommentForm' => $taskCommentForm,
+        'userId'=>$userId,
     ]) ?>
 
 </div>

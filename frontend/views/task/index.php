@@ -1,6 +1,6 @@
 <?php
 
-use app\models\filters\TasksFilter;
+use frontend\models\filters\TasksFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -12,7 +12,7 @@ use yii\bootstrap\ActiveForm;
 
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\filters\TasksFilter */
+/* @var $searchModel frontend\models\filters\TasksFilter */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Список задач';
@@ -70,7 +70,7 @@ echo $form->field($searchModel, 'deadline')->dropDownList($items,$params); ?>
 
     ]);
 
-    echo app\widgets\MyPaginatorWidget::widget([
+    echo frontend\widgets\MyPaginatorWidget::widget([
         'dataProvider'=>$dataProvider,
         'layout' => "\n{pager}",
     ]);
