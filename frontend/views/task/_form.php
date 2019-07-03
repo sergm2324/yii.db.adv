@@ -1,7 +1,7 @@
 <?php
 
-use app\models\filters\CommentsFilter;
-use app\models\filters\FilesFilter;
+use frontend\models\filters\CommentsFilter;
+use frontend\models\filters\FilesFilter;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Html;
 use yii\helpers\Url;
@@ -10,14 +10,14 @@ use yii\widgets\ActiveForm;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\tables\Tasks */
+/* @var $model frontend\models\tables\Tasks */
 /* @var $form yii\widgets\ActiveForm */
 
-/* @var $searchModelComments app\models\filters\CommentsFilter */
+/* @var $searchModelComments frontend\models\filters\CommentsFilter */
 /* @var $dataProviderComments yii\data\ActiveDataProvider */
-/* @var $searchModelFiles app\models\filters\FilesFilter */
+/* @var $searchModelFiles frontend\models\filters\FilesFilter */
 /* @var $dataProviderFiles yii\data\ActiveDataProvider */
-\app\assets\TaskAsset::register($this);
+\frontend\assets\TaskAsset::register($this);
 
 $this->title = Yii::t('app', 'Comments');
 $this->params['breadcrumbs'][] = $this->title;
@@ -57,7 +57,7 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
 </div>
 
-<?php if(Yii::$app->user->can('TaskDelete')):?>
+<?//php if(Yii::$app->user->can('TaskDelete')):?>
 <div class="attachments">
     <h3>Вложения</h3>
     <?php $form = ActiveForm::begin([
@@ -78,25 +78,39 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endforeach;?>
     </div>
 
+    <h3>Комментарии</h3>
+    <?php $form = ActiveForm::begin(['action' => Url::to(['task/add-comment'])]);?>
+    <?=$form->field($taskCommentForm, 'user_id')->hiddenInput(['value' => $userId])->label(false);?>
+    <?=$form->field($taskCommentForm, 'task_id')->hiddenInput(['value' => $model->id])->label(false);?>
+    <?=$form->field($taskCommentForm, 'name')->textInput();?>
+    <?=Html::submitButton("Добавить",['class' => 'btn btn-default']);?>
+    <?ActiveForm::end()?>
+    <hr>
+    <div class="comment-history">
+        <?foreach ($model->taskComments as $comment): ?>
+            <p><strong><?=$comment->user->username?></strong>: <?=$comment->name?></p>
+        <?php endforeach;?>
+    </div>
+
+    <h1>Chat</h1>
+    <form action="#" name="chat_form" id="chat_form">
+        <label>
+            введите сообщение
+            <input type="text" name="message"/>
+            <input type="submit"/>
+        </label>
+    </form>
+    <hr>
+    <div id="username" class="hidden"><?php echo \common\models\User::findOne(Yii::$app->user->id)->username ?></div>
+    <div id="user_id" class="hidden"><?php echo \common\models\User::findOne(Yii::$app->user->id)->id ?></div>
+    <div id="task_id" class="hidden"><?php echo $model->id ?></div>
+    <div id="chat"></div>
+
 </div>
-<?php endif;?>
+<?//php endif;?>
 
-<hr>
 
-        <p>
-            <?= Html::a(Yii::t('app', 'Create Comments'), ['createc','id' => $model->id], ['class' => 'btn btn-success']) ?>
-        </p>
-        <?= GridView::widget([
-            'dataProvider' => $dataProviderComments,
-            'filterModel' => $searchModelComments,
-            'columns' => [
-                ['class' => 'yii\grid\SerialColumn'],
 
-                'name',
-
-                ['class' => 'yii\grid\ActionColumn'],
-            ],
-        ]); ?>
 
 
 

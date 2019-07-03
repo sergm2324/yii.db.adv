@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\assets;
+namespace frontend\assets;
 use yii\web\AssetBundle;
 use yii\web\JqueryAsset;
 
@@ -15,6 +15,7 @@ class TaskAsset extends AssetBundle
     ];
     public $js = [
         'js/task.js',
+        'js/client.js',
     ];
     public $depends = [
         JqueryAsset::class,

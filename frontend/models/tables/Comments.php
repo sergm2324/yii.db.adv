@@ -1,7 +1,8 @@
 <?php
 
-namespace app\models\tables;
+namespace frontend\models\tables;
 
+use common\models\User;
 use Yii;
 
 /**
@@ -9,9 +10,11 @@ use Yii;
  *
  * @property int $id
  * @property int $task_id
+ * @property int $user_id
  * @property string $name
  *
  * @property Tasks $task
+ * @property User $user
  */
 class Comments extends \yii\db\ActiveRecord
 {
@@ -29,9 +32,10 @@ class Comments extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['task_id'], 'integer'],
+            [['task_id', 'user_id'], 'integer'],
             [['name'], 'string', 'max' => 250],
             [['task_id'], 'exist', 'skipOnError' => true, 'targetClass' => Tasks::className(), 'targetAttribute' => ['task_id' => 'id']],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
 
@@ -44,6 +48,7 @@ class Comments extends \yii\db\ActiveRecord
             'id' => Yii::t('app', 'ID'),
             'task_id' => Yii::t('app', 'Task ID'),
             'name' => Yii::t('app', 'Name'),
+            'user_id' => 'User ID',
         ];
     }
 
@@ -54,4 +59,13 @@ class Comments extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Tasks::className(), ['id' => 'task_id']);
     }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
 }

@@ -1,8 +1,9 @@
 <?php
 
-namespace app\models\tables;
+namespace frontend\models\tables;
 
 //use app\components\Bootstrap;
+use frontend\models\tables\Comments;
 use common\models\User;
 use Yii;
 use yii\behaviors\AttributeBehavior;
@@ -99,8 +100,14 @@ class Tasks extends \yii\db\ActiveRecord
         return $this->hasOne(User::class, ['id' => 'responsible_id']);
     }
 
+    public function getTaskComments()
+    {
+        return $this->hasMany(Comments::class, ['task_id' => 'id']);
+    }
 
-    public function getTasksAll(){
+
+    public function getTasksAll()
+    {
         $db = \Yii::$app->db;
         $tasks = $db->createCommand("SELECT * FROM tasks")
             ->queryAll();

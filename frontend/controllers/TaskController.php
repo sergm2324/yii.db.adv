@@ -4,14 +4,15 @@
 namespace frontend\controllers;
 
 
-use app\models\filters\CommentsFilter;
-use app\models\filters\FilesFilter;
-use app\models\filters\TasksFilter;
-use app\models\forms\TaskAttachmentsAddForm;
-use app\models\tables\Comments;
-use app\models\tables\Files;
-use app\models\tables\Tasks;
-use app\models\tables\TaskStatuses;
+use app\models\tables\TaskComments;
+use frontend\models\filters\CommentsFilter;
+use frontend\models\filters\FilesFilter;
+use frontend\models\filters\TasksFilter;
+use frontend\models\forms\TaskAttachmentsAddForm;
+use frontend\models\tables\Comments;
+use frontend\models\tables\Files;
+use frontend\models\tables\Tasks;
+use frontend\models\tables\TaskStatuses;
 use common\models\User;
 use Yii;
 use yii\filters\AccessControl;
@@ -103,6 +104,8 @@ class TaskController extends Controller
             'dataProviderFiles' => $dataProviderFiles,
             'filesnames' => $filesnames,
             'taskAttachmentForm' => new TaskAttachmentsAddForm(),
+            'taskCommentForm' => new Comments(),
+            'userId' => \Yii::$app->user->id,
         ]);
     }
 
@@ -140,6 +143,32 @@ class TaskController extends Controller
             'model' => $model,
         ]);
     }
+
+    public function actionAddComment()
+    {
+        $model = new Comments();
+        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+            \Yii::$app->session->setFlash('success', "Комментарий добавлен");
+        } else {
+            \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
+        }
+        $this->redirect(\Yii::$app->request->referrer);
+    }
+
+    public function actionComment()
+    {
+        if(\Yii::$app->request->isAjax){
+            $model = new Comments();
+            $model->task_id=Yii::$app->request->get('id');
+            $model->user_id = Yii::$app->user->id;
+            $model->name = Yii::$app->request->get('textMessage');
+            $model->save();
+            $this->redirect(\Yii::$app->request->referrer);
+            return 'Запрос принят!';
+        }
+    }
+
+
 
     /**
      * Creates a new Files model.
