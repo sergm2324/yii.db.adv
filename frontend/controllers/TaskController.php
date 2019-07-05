@@ -9,6 +9,7 @@ use frontend\models\filters\CommentsFilter;
 use frontend\models\filters\FilesFilter;
 use frontend\models\filters\TasksFilter;
 use frontend\models\forms\TaskAttachmentsAddForm;
+use frontend\models\tables\Chat;
 use frontend\models\tables\Comments;
 use frontend\models\tables\Files;
 use frontend\models\tables\Tasks;
@@ -72,11 +73,18 @@ class TaskController extends Controller
      */
     public function actionCard($id)
     {
+        $model1 = new Comments();
+        if ($model1->load(\Yii::$app->request->post()) && $model1->save()) {
+            \Yii::$app->session->setFlash('success', "Комментарий добавлен");
+            $model1 = new Comments();
+        }
+
+
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             \Yii::$app->cache->flush();
-            return $this->redirect(['index']);
+            //return $this->redirect(['index']);
         }
 
         $status = TaskStatuses::getStatusesList();
@@ -93,7 +101,25 @@ class TaskController extends Controller
         $filesnames = Files::find()
             ->where(['task_id' => $task_id])
             ->all();
-
+        if(Yii::$app->request->isPjax){
+            $answer = true;
+            return $this->render('card', [
+                'model' => $model,
+                'status'=>$status,
+                'responsible'=>$responsible,
+                'searchModelComments' => $searchModelComments,
+                'dataProviderComments' => $dataProviderComments,
+                'searchModelFiles' => $searchModelFiles,
+                'dataProviderFiles' => $dataProviderFiles,
+                'filesnames' => $filesnames,
+                'taskAttachmentForm' => new TaskAttachmentsAddForm(),
+                'taskCommentForm' => new Comments(),
+                'userId' => \Yii::$app->user->id,
+                'id'=>$id,
+                'chat'=> new Chat(),
+                'answer'=>$answer,
+            ]);
+        }
         return $this->render('card', [
             'model' => $model,
             'status'=>$status,
@@ -106,6 +132,8 @@ class TaskController extends Controller
             'taskAttachmentForm' => new TaskAttachmentsAddForm(),
             'taskCommentForm' => new Comments(),
             'userId' => \Yii::$app->user->id,
+            'id'=>$id,
+            'chat'=> new Chat(),
         ]);
     }
 
@@ -144,31 +172,16 @@ class TaskController extends Controller
         ]);
     }
 
-    public function actionAddComment()
-    {
-        $model = new Comments();
-        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
-            \Yii::$app->session->setFlash('success', "Комментарий добавлен");
-        } else {
-            \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
-        }
-        $this->redirect(\Yii::$app->request->referrer);
-    }
-
-    public function actionComment()
-    {
-        if(\Yii::$app->request->isAjax){
-            $model = new Comments();
-            $model->task_id=Yii::$app->request->get('id');
-            $model->user_id = Yii::$app->user->id;
-            $model->name = Yii::$app->request->get('textMessage');
-            $model->save();
-            $this->redirect(\Yii::$app->request->referrer);
-            return 'Запрос принят!';
-        }
-    }
-
-
+//    public function actionAddComment()
+//    {
+//        $model = new Comments();
+//        if ($model->load(\Yii::$app->request->post()) && $model->save()) {
+//            \Yii::$app->session->setFlash('success', "Комментарий добавлен");
+//        } else {
+//            \Yii::$app->session->setFlash('error', "Не удалось добавить комментарий");
+//        }
+//        $this->redirect(\Yii::$app->request->referrer);
+//    }
 
     /**
      * Creates a new Files model.

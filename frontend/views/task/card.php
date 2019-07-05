@@ -5,11 +5,14 @@ use \yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use \yii\helpers\Url;
 use yii\web\View;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\tables\Tasks */
-
+Pjax::begin(['id' => 'tasks_pjax']);
 $this->title = 'Редактирование задачи: ' . $model->name;
+Pjax::end();
+
 $this->params['breadcrumbs'][] = ['label' => 'Список задач', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->name];
 $this->params['breadcrumbs'][] = 'Карточка задачи';
@@ -30,6 +33,9 @@ $this->params['breadcrumbs'][] = 'Карточка задачи';
         'taskAttachmentForm'=>$taskAttachmentForm,
         'taskCommentForm' => $taskCommentForm,
         'userId'=>$userId,
+        'channel' =>$id,
+        'chat' =>$chat,
+        'answer'=>$answer,
     ]) ?>
 
 </div>
