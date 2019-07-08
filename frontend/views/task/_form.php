@@ -7,7 +7,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\View;
 use yii\widgets\ActiveForm;
-use yii\grid\GridView;
+use yii\widgets\Pjax;
 
 /* @var $this yii\web\View */
 /* @var $model frontend\models\tables\Tasks */
@@ -21,12 +21,15 @@ use yii\grid\GridView;
 
 $this->title = Yii::t('app', 'Comments');
 $this->params['breadcrumbs'][] = $this->title;
-
 ?>
 
 <div class="task-edit">
     <div class="task-main">
-        <?php $form = ActiveForm::begin(['action' => Url::to(['task/card', 'id' => $model->id])]);?>
+        <?php Pjax::begin(['id' => 'tasks_pjax'])?>
+        <?php $form = ActiveForm::begin(['action' => Url::to(['task/card', 'id' => $model->id]),
+            'options' => [
+            'data-pjax' => true,
+        ],]);?>
         <?=$form->field($model, 'name')->textInput();?>
         <div class="row">
             <div class="col-lg-4">
@@ -52,6 +55,7 @@ $this->params['breadcrumbs'][] = $this->title;
         </div>
         <?=Html::submitButton(\Yii::t("app",'Save'),['class' => 'btn btn-success']);?>
         <?ActiveForm::end()?>
+        <?php Pjax::end()?>
         <br>
         <button class = "push-me btn btn-success">Нажми меня</button>
     </div>
@@ -60,14 +64,18 @@ $this->params['breadcrumbs'][] = $this->title;
 <?//php if(Yii::$app->user->can('TaskDelete')):?>
 <div class="attachments">
     <h3>Вложения</h3>
+    <?php Pjax::begin(['id' => 'files_pjax'])?>
     <?php $form = ActiveForm::begin([
         'action' => Url::to(['task/add-attachment']),
-        'options' => ['class' => "form-inline"]
+        'options' => ['class' => "form-inline",
+            'data-pjax' => true,]
     ]);?>
     <?=$form->field($taskAttachmentForm, 'taskId')->hiddenInput(['value' => $model->id])->label(false);?>
     <?=$form->field($taskAttachmentForm, 'attachment')->fileInput();?>
     <?=Html::submitButton("Добавить",['class' => 'btn btn-default']);?>
     <?ActiveForm::end()?>
+    <?php Pjax::end()?>
+
     <hr>
 
     <div class="attachments-history">
@@ -78,36 +86,47 @@ $this->params['breadcrumbs'][] = $this->title;
         <?php endforeach;?>
     </div>
 
+
     <h3>Комментарии</h3>
-    <?php $form = ActiveForm::begin(['action' => Url::to(['task/add-comment'])]);?>
+    <?php Pjax::begin(['id' => 'notes'])?>
+    <?php $form = ActiveForm::begin([
+        'options' => [
+            'data-pjax' => true,
+        ],
+        ]);?>
     <?=$form->field($taskCommentForm, 'user_id')->hiddenInput(['value' => $userId])->label(false);?>
     <?=$form->field($taskCommentForm, 'task_id')->hiddenInput(['value' => $model->id])->label(false);?>
     <?=$form->field($taskCommentForm, 'name')->textInput();?>
     <?=Html::submitButton("Добавить",['class' => 'btn btn-default']);?>
     <?ActiveForm::end()?>
+
     <hr>
     <div class="comment-history">
         <?foreach ($model->taskComments as $comment): ?>
             <p><strong><?=$comment->user->username?></strong>: <?=$comment->name?></p>
         <?php endforeach;?>
     </div>
+    <?php Pjax::end()?>
 
-    <h1>Chat</h1>
-    <form action="#" name="chat_form" id="chat_form">
-        <label>
-            введите сообщение
-            <input type="text" name="message"/>
-            <input type="submit"/>
-        </label>
-    </form>
     <hr>
-    <div id="username" class="hidden"><?php echo \common\models\User::findOne(Yii::$app->user->id)->username ?></div>
-    <div id="user_id" class="hidden"><?php echo \common\models\User::findOne(Yii::$app->user->id)->id ?></div>
-    <div id="task_id" class="hidden"><?php echo $model->id ?></div>
-    <div id="chat"></div>
 
+    <div class="task-chat">
+        <form action="#" name="chat_form" id="chat_form">
+            <label>
+                <input type="hidden" name="channel" value="<?=$channel?>"/>
+                <input type="hidden" name="user_id" value="<?=$userId?>"/>
+                введите сообщение
+                <input type="text" name="message"/>
+                <input type="submit"/>
+            </label>
+        </form>
+        <hr>
+        <div id="chat"></div>
+    </div>
 </div>
-<?//php endif;?>
+<script>
+    var channel = '<?=$channel?>';
+</script>
 
 
 
