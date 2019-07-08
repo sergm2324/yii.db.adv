@@ -30,6 +30,10 @@ return [
                 ],
             ],
         ],
+        'bot' => [
+            'class' => 'SonkoDmitry\Yii\TelegramBot\Component',
+            'apiToken' => '848124532:AAG68LuPnvQtNLuZsB98espU-JuY7dBLJAE',
+        ],
     ],
     'params' => $params,
 ];

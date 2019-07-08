@@ -33,6 +33,9 @@ $this->params['breadcrumbs'][] = $this->title;
         <?=$form->field($model, 'name')->textInput();?>
         <div class="row">
             <div class="col-lg-4">
+                <?=$form->field($model, 'id_project')->dropDownList($project)?>
+            </div>
+            <div class="col-lg-4">
                 <?=$form->field($model, 'status_id')->dropDownList($status)?>
             </div>
             <div class="col-lg-4">

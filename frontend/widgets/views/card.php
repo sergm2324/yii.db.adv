@@ -1,7 +1,7 @@
 <?php
 use yii\helpers\Url;
 
-/** @var $model app\models\tables\Tasks */
+/** @var $model frontend\models\tables\Tasks */
 ?>
 
 <div class="task-container">
@@ -11,6 +11,7 @@ use yii\helpers\Url;
         <div class="task-preview">
             <div class="task-preview-header"><?= $model->name ?></div>
             <div class="task-preview-content"><?=$model['description']?></div>
+            <div class="task-preview-user"><?=$model->project->name?></div>
             <div class="task-preview-user"><?=$model->usercr->username?></div>
             <div class="task-preview-user"><?=$model->userres->username?></div>
             <div class="task-preview-user"><?=$model['deadline']?></div>

@@ -17,6 +17,7 @@ use yii\db\Expression;
  * @property int $id
  * @property string $name Название задачи
  * @property string $description
+ * @property int $id_project
  * @property int $creator_id
  * @property int $responsible_id
  * @property string $deadline
@@ -24,6 +25,7 @@ use yii\db\Expression;
  * @property int $created_at
  * @property int $updated_at
  * @property $status
+ * @property $project
  *
  * @property $usercr
  *
@@ -62,7 +64,7 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return [
             [['name'], 'required'],
-            [['creator_id', 'responsible_id', 'status_id'], 'integer'],
+            [['creator_id', 'responsible_id', 'status_id', 'id_project'], 'integer'],
             [['deadline'], 'safe'],
             [['name'], 'string', 'max' => 50],
             [['description'], 'string', 'max' => 255],
@@ -78,6 +80,7 @@ class Tasks extends \yii\db\ActiveRecord
             'id' => 'ID',
             'name' => \Yii::t('app','Name'),
             'description' => \Yii::t('app','Description'),
+            'id_project' => \Yii::t('app','Project ID'),
             'creator_id' => \Yii::t('app','Creator ID'),
             'responsible_id' => \Yii::t('app','Responsible ID'),
             'deadline' => \Yii::t('app','Deadline'),
@@ -89,6 +92,12 @@ class Tasks extends \yii\db\ActiveRecord
     {
         return $this->hasOne(TaskStatuses::class, ['id' => 'status_id']);
     }
+
+    public function getProject()
+    {
+        return $this->hasOne(Projects::class, ['id' => 'id_project']);
+    }
+
 
     public function getUsercr()
     {
