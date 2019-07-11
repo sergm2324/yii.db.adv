@@ -23,6 +23,7 @@ $this->params['breadcrumbs'][] = 'Карточка задачи';
 
     <?= $this->render('_form', [
         'model' => $model,
+        'project'=>$project,
         'status'=>$status,
         'responsible'=>$responsible,
         'dataProviderComments'=>$dataProviderComments,

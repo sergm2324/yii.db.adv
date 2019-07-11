@@ -12,6 +12,7 @@ use frontend\models\forms\TaskAttachmentsAddForm;
 use frontend\models\tables\Chat;
 use frontend\models\tables\Comments;
 use frontend\models\tables\Files;
+use frontend\models\tables\Projects;
 use frontend\models\tables\Tasks;
 use frontend\models\tables\TaskStatuses;
 use common\models\User;
@@ -89,6 +90,7 @@ class TaskController extends Controller
 
         $status = TaskStatuses::getStatusesList();
         $responsible = User::getUsersList();
+        $project = Projects::getProjectsList();
 
 
         $searchModelComments = new CommentsFilter();
@@ -105,6 +107,7 @@ class TaskController extends Controller
             $answer = true;
             return $this->render('card', [
                 'model' => $model,
+                'project'=>$project,
                 'status'=>$status,
                 'responsible'=>$responsible,
                 'searchModelComments' => $searchModelComments,
@@ -122,6 +125,7 @@ class TaskController extends Controller
         }
         return $this->render('card', [
             'model' => $model,
+            'project'=>$project,
             'status'=>$status,
             'responsible'=>$responsible,
             'searchModelComments' => $searchModelComments,
