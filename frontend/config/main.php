@@ -17,6 +17,11 @@ return [
         '@img' => "@app/web/img",
         '@mdm/admin' => 'path/to/your/extracted',
     ],
+    'modules' => [
+        'v1' => [
+            'class' => 'frontend\modules\v1\Module',
+        ],
+    ],
     'components' => [
         'bot' => [
             'class' => \SonkoDmitry\Yii\TelegramBot\Component::class,
@@ -24,6 +29,9 @@ return [
         ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
+            'parsers' => [
+                'application/json' => \yii\web\JsonParser::class
+            ],
             'cookieValidationKey' => $params['cookieValidationKey'],
         ],
         'user' => [
@@ -51,14 +59,15 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        /*
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => \yii\rest\UrlRule::class, 'controller' => ['v1/message']]
             ],
         ],
-        */
+
     ],
     'params' => $params,
 ];
